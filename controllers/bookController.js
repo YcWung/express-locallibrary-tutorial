@@ -3,8 +3,7 @@ var Author = require('../models/author');
 var Genre = require('../models/genre');
 var BookInstance = require('../models/bookinstance');
 
-const { body,validationResult } = require('express-validator/check');
-const { sanitizeBody } = require('express-validator/filter');
+const validator = require('express-validator');
 
 var async = require('async');
 
@@ -12,19 +11,19 @@ exports.index = function(req, res) {
 
     async.parallel({
         book_count: function(callback) {
-            Book.count(callback);
+            Book.countDocuments(callback);
         },
         book_instance_count: function(callback) {
-            BookInstance.count(callback);
+            BookInstance.countDocuments(callback);
         },
         book_instance_available_count: function(callback) {
-            BookInstance.count({status:'Available'},callback);
+            BookInstance.countDocuments({status:'Available'},callback);
         },
         author_count: function(callback) {
-            Author.count(callback);
+            Author.countDocuments(callback);
         },
         genre_count: function(callback) {
-            Genre.count(callback);
+            Genre.countDocuments(callback);
         },
     }, function(err, results) {
         res.render('index', { title: 'Local Library Home', error: err, data: results });
@@ -107,20 +106,20 @@ exports.book_create_post = [
     },
 
     // Validate fields.
-    body('title', 'Title must not be empty.').isLength({ min: 1 }).trim(),
-    body('author', 'Author must not be empty.').isLength({ min: 1 }).trim(),
-    body('summary', 'Summary must not be empty.').isLength({ min: 1 }).trim(),
-    body('isbn', 'ISBN must not be empty').isLength({ min: 1 }).trim(),
+    validator.body('title', 'Title must not be empty.').trim().isLength({ min: 1 }),
+    validator.body('author', 'Author must not be empty.').trim().isLength({ min: 1 }),
+    validator.body('summary', 'Summary must not be empty.').trim().isLength({ min: 1 }),
+    validator.body('isbn', 'ISBN must not be empty').trim().isLength({ min: 1 }),
   
     // Sanitize fields.
-    sanitizeBody('*').escape(),
-    sanitizeBody('genre.*').escape(),
+    validator.body('*').escape(),
+    validator.body('genre.*').escape(),
     // Process request after validation and sanitization.
     (req, res, next) => {
         
 
         // Extract the validation errors from a request.
-        const errors = validationResult(req);
+        const errors = validator.validationResult(req);
 
         // Create a Book object with escaped and trimmed data.
         var book = new Book(
@@ -273,23 +272,23 @@ exports.book_update_post = [
     },
    
     // Validate fields.
-    body('title', 'Title must not be empty.').isLength({ min: 1 }).trim(),
-    body('author', 'Author must not be empty.').isLength({ min: 1 }).trim(),
-    body('summary', 'Summary must not be empty.').isLength({ min: 1 }).trim(),
-    body('isbn', 'ISBN must not be empty').isLength({ min: 1 }).trim(),
+    validator.body('title', 'Title must not be empty.').trim().isLength({ min: 1 }),
+    validator.body('author', 'Author must not be empty.').trim().isLength({ min: 1 }),
+    validator.body('summary', 'Summary must not be empty.').trim().isLength({ min: 1 }),
+    validator.body('isbn', 'ISBN must not be empty').trim().isLength({ min: 1 }),
 
     // Sanitize fields.
-    sanitizeBody('title').escape(),
-    sanitizeBody('author').escape(),
-    sanitizeBody('summary').escape(),
-    sanitizeBody('isbn').escape(),
-    sanitizeBody('genre.*').escape(),
+    validator.body('title').escape(),
+    validator.body('author').escape(),
+    validator.body('summary').escape(),
+    validator.body('isbn').escape(),
+    validator.body('genre.*').escape(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
 
         // Extract the validation errors from a request.
-        const errors = validationResult(req);
+        const errors = validator.validationResult(req);
 
         // Create a Book object with escaped/trimmed data and old id.
         var book = new Book(

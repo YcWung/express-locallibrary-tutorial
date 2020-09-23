@@ -2,8 +2,7 @@ var Author = require('../models/author')
 var async = require('async')
 var Book = require('../models/book')
 
-const { body, validationResult } = require('express-validator/check');
-const { sanitizeBody } = require('express-validator/filter');
+const validator = require('express-validator');
 
 // Display list of all Authors.
 exports.author_list = function (req, res, next) {
@@ -52,24 +51,24 @@ exports.author_create_get = function (req, res, next) {
 exports.author_create_post = [
 
     // Validate fields.
-    body('first_name').isLength({ min: 1 }).trim().withMessage('First name must be specified.')
+    validator.body('first_name').trim().isLength({ min: 1 }).withMessage('First name must be specified.')
         .isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
-    body('family_name').isLength({ min: 1 }).trim().withMessage('Family name must be specified.')
+    validator.body('family_name').trim().isLength({ min: 1 }).withMessage('Family name must be specified.')
         .isAlphanumeric().withMessage('Family name has non-alphanumeric characters.'),
-    body('date_of_birth', 'Invalid date of birth').optional({ checkFalsy: true }).isISO8601(),
-    body('date_of_death', 'Invalid date of death').optional({ checkFalsy: true }).isISO8601(),
+    validator.body('date_of_birth', 'Invalid date of birth').optional({ checkFalsy: true }).isISO8601(),
+    validator.body('date_of_death', 'Invalid date of death').optional({ checkFalsy: true }).isISO8601(),
 
     // Sanitize fields.
-    sanitizeBody('first_name').escape(),
-    sanitizeBody('family_name').escape(),
-    sanitizeBody('date_of_birth').toDate(),
-    sanitizeBody('date_of_death').toDate(),
+    validator.body('first_name').escape(),
+    validator.body('family_name').escape(),
+    validator.body('date_of_birth').toDate(),
+    validator.body('date_of_death').toDate(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
 
         // Extract the validation errors from a request.
-        const errors = validationResult(req);
+        const errors = validator.validationResult(req);
         
         // Create Author object with escaped and trimmed data
         var author = new Author(
@@ -173,24 +172,24 @@ exports.author_update_get = function (req, res, next) {
 exports.author_update_post = [
 
     // Validate fields.
-    body('first_name').isLength({ min: 1 }).trim().withMessage('First name must be specified.')
+    validator.body('first_name').trim().isLength({ min: 1 }).withMessage('First name must be specified.')
         .isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
-    body('family_name').isLength({ min: 1 }).trim().withMessage('Family name must be specified.')
+    validator.body('family_name').trim().isLength({ min: 1 }).withMessage('Family name must be specified.')
         .isAlphanumeric().withMessage('Family name has non-alphanumeric characters.'),
-    body('date_of_birth', 'Invalid date of birth').optional({ checkFalsy: true }).isISO8601(),
-    body('date_of_death', 'Invalid date of death').optional({ checkFalsy: true }).isISO8601(),
+    validator.body('date_of_birth', 'Invalid date of birth').optional({ checkFalsy: true }).isISO8601(),
+    validator.body('date_of_death', 'Invalid date of death').optional({ checkFalsy: true }).isISO8601(),
 
     // Sanitize fields.
-    sanitizeBody('first_name').escape(),
-    sanitizeBody('family_name').escape(),
-    sanitizeBody('date_of_birth').toDate(),
-    sanitizeBody('date_of_death').toDate(),
+    validator.body('first_name').escape(),
+    validator.body('family_name').escape(),
+    validator.body('date_of_birth').toDate(),
+    validator.body('date_of_death').toDate(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
 
         // Extract the validation errors from a request.
-        const errors = validationResult(req);
+        const errors = validator.validationResult(req);
 
         // Create Author object with escaped and trimmed data (and the old id!)
         var author = new Author(
