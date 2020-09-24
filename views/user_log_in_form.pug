@@ -1,0 +1,23 @@
+extends layout
+
+block content
+
+  .container-sm.mx-auto
+    form.log-form(action='' method='POST')
+      h1 Log in with user:
+      dl.form-group
+        dt
+          label(for='username') Username:
+        dd
+          input#username.form-control(type='text', name='username', required='true', placeholder='username', value=(undefined===user ? '' : user.username))
+      dl.form-group
+        dt
+          lable(for='password') Password:
+        dd
+          input#password.form-control(type='password', name='password', required='true', placeholder='password', value=(undefined===user ? '' : user.password))
+      button.btn.btn-primary.width-full(type='submit') Log In
+
+  if errors
+    ul
+      for error in errors
+        li!=error.msg

@@ -5,6 +5,7 @@ html(lang='en')
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     link(rel="stylesheet", href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    link(rel="stylesheet", href="https://unpkg.com/@primer/css/dist/primer.css")
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
     link(rel='stylesheet', href='/stylesheets/style.css')
@@ -12,6 +13,13 @@ html(lang='en')
     div(class='container-fluid')
       div(class='row')
         div(class='col-sm-2')
+          if currentUser
+            span.mr-1 #{currentUser.username}
+            form(action='users/log-out', method='POST')
+              button.btn.btn-primary(type='submit') Log Out
+          else
+            a.btn.btn-primary.mr-1(type='button', href='/users/sign-up') Sign Up
+            a.btn.btn-primary(type='button', href='/users/log-in') Log In
           block sidebar
             ul(class='sidebar-nav')
               li 

@@ -7,6 +7,8 @@ const validator = require('express-validator');
 
 var async = require('async');
 
+var debug = require('debug')('local-library:bookController');
+
 exports.index = function(req, res) {
 
     async.parallel({
@@ -26,6 +28,8 @@ exports.index = function(req, res) {
             Genre.countDocuments(callback);
         },
     }, function(err, results) {
+        debug('[done] db count: ' + JSON.stringify(results));
+        debug("log-in post handler: res.locals.currentUser = " + JSON.stringify(res.locals.currentUser));
         res.render('index', { title: 'Local Library Home', error: err, data: results });
     });
 };

@@ -3,3 +3,7 @@
     padding: 0;
     list-style: none;
 }
+
+.log-form .form-group dd .form-control {
+    width: 100%;
+}
