@@ -9,7 +9,7 @@ function initPassport() {
     User.findOne({ username: username }, (err, user) => {
       debug('[done] db find user ' + JSON.stringify(user));
       if (err) return done(err);
-      if (!user) return done(null, false, { msg: "Incorrect Username" });
+      if (!user) return done(null, false, "Incorrect Username");
       bcrypt.compare(password, user.password, (err, is_valid) => {
         if (err) return done(err);
         if (!is_valid) return done(null, false, 'Invalid Password');

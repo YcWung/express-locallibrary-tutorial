@@ -18,6 +18,6 @@ block content
       button.btn.btn-primary.width-full(type='submit') Log In
 
   if errors
-    ul
+    ul.container-sm.mx-auto.bg-danger.text-danger
       for error in errors
         li!=error.msg
